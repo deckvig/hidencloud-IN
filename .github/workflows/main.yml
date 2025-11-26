@@ -28,18 +28,19 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y xvfb
 
-      # --- 修改点：安装 Firefox ---
-      - name: Install Playwright and Firefox
+      # --- 修改点：安装 Playwright 和 官方 Chrome ---
+      - name: Install Playwright and Chrome
         run: |
           pip install playwright
-          python -m playwright install --with-deps firefox
+          # 安装 Playwright 对应的 Chrome 浏览器
+          python -m playwright install --with-deps chrome
 
       - name: Run Renew Script with XVFB
         env:
           HIDENCLOUD_COOKIE: ${{ secrets.HIDENCLOUD_COOKIE }}
           HIDENCLOUD_EMAIL: ${{ secrets.HIDENCLOUD_EMAIL }}
           HIDENCLOUD_PASSWORD: ${{ secrets.HIDENCLOUD_PASSWORD }}
-        # 依然使用 xvfb
+        # 使用 xvfb 模拟显示器
         run: xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" python -u renew_service.py
 
       - name: Upload error artifacts
